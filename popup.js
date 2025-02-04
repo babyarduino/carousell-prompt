@@ -1,11 +1,17 @@
 window.onload = async function () {
     const suggestionsDiv = document.getElementById("suggestions");
+    const title = document.getElementById("title"); // Get the title element
 
     // Automatically fetch highlighted text on popup open
     let selectedText = await getHighlightedText();
 
     // Detect keywords and auto-fill responses
-    let suggestions = generateSuggestions(selectedText);
+    let { detectedKeyword, suggestions } = generateSuggestions(selectedText);
+
+    // Update the title to show the detected keyword or "No keyword detected"
+    title.textContent = detectedKeyword ? `Keyword: ${detectedKeyword}` : "No keyword detected";
+
+    // Display the suggestions
     displaySuggestions(suggestions);
 };
 
@@ -45,12 +51,17 @@ function generateSuggestions(text) {
     };
 
     let detectedSuggestions = [];
+    let detectedKeyword = null;
+
     for (let keyword in keywordResponses) {
         if (text.toLowerCase().includes(keyword)) {
-            detectedSuggestions = detectedSuggestions.concat(keywordResponses[keyword]);
+            detectedKeyword = keyword; // Store the first detected keyword
+            detectedSuggestions = keywordResponses[keyword];
+            break; // Stop at the first match
         }
     }
-    return detectedSuggestions;
+
+    return { detectedKeyword, suggestions: detectedSuggestions };
 }
 
 // Display keyword matches as separate buttons
