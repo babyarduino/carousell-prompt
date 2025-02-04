@@ -1,16 +1,15 @@
 {
-    "manifest_version": 3,
-    "name": "Carousell Keyword Highlighter",
-    "version": "1.0",
-    "description": "Suggests template responses based on highlighted keywords in Carousell chat.",
-    "permissions": ["activeTab", "scripting"],
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "16": "icon.png",
-        "48": "icon.png",
-        "128": "icon.png"
-      }
+  "manifest_version": 3,
+  "name": "Carousell Keyword Highlighter",
+  "version": "1.0",
+  "description": "Suggests template responses based on highlighted keywords in Carousell chat.",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
     }
   }
-  
+}
