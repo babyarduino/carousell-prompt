@@ -3,83 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keyword Detector LOL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Keyword Detector</title>
     <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            width: 320px;
-            padding: 20px;
-            margin: 0;
-            background: #ffffff;
-            color: #1a1a1a;
-        }
-        h3 {
-            font-size: 15px;
-            color: #1a1a1a;
-            margin: 0 0 16px 0;
-            font-weight: 600;
-            letter-spacing: -0.2px;
-        }
-        textarea {
-            width: 100%;
-            height: 88px;
-            margin-bottom: 16px;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-            resize: none;
-            background-color: #fafafa;
-        }
-        textarea:focus {
-            outline: none;
-            border-color: #ff5722;
-            background-color: #ffffff;
-        }
-        textarea::placeholder {
-            color: #757575;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #e61e3d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s ease;
-            letter-spacing: -0.1px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        button:hover {
-            background: #d41835;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        #suggestions {
-            margin-top: 16px;
-            font-size: 14px;
-            color: #424242;
-            line-height: 1.5;
-        }
+        body { font-family: Arial, sans-serif; width: 300px; padding: 10px; text-align: center; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+        button { width: 100%; padding: 8px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
     </style>
 </head>
 <body>
-    <h3>Highlight text & Click 'Detect'</h3>
-    <textarea id="selectedText" placeholder="Highlighted text appears here..." readonly></textarea>
-    <button id="detectBtn">Detect Keywords</button>
-    <div id="suggestions"></div>
+    <h3>Keyword Detection</h3>
+    <textarea id="selectedText" readonly></textarea>
+    <button id="copyBtn">Copy Text</button>
     <script src="popup.js"></script>
 </body>
 </html>
-
