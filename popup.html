@@ -8,11 +8,11 @@
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            width: 320px;
-            padding: 16px;
+            width: 260px; /* Smaller Width */
+            padding: 12px;
             margin: 0;
             background: #ffffff;
-            min-height: 250px;
+            min-height: 200px; /* Reduced Height */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -20,24 +20,24 @@
         }
         .logo {
             display: block;
-            width: 40px;
-            height: 40px;
-            margin: 0 auto 6px;
+            width: 32px; /* Smaller Logo */
+            height: 32px;
+            margin: 0 auto 4px;
         }
         .app-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: #333333;
+            color: #333;
             text-align: center;
-            margin-bottom: 2px;
+            margin-bottom: 0px;
         }
         #description {
-            font-size: 12px;
-            color: #777777;
+            font-size: 9px;
+            color: #777;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* Less space */
             font-weight: 400;
-            line-height: 1.4;
+            line-height: 1.2;
         }
         .divider {
             height: 1px;
@@ -46,55 +46,55 @@
             margin-bottom: 10px;
         }
         #title {
-            font-size: 22px; /* Much Bigger Title */
+            font-size: 18px; /* Slightly Smaller */
             font-weight: 700;
             color: #1a1a1a;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         #suggestions {
             width: 100%;
             padding: 2px 0;
-            margin-bottom: 8px; /* Reduced spacing */
+            margin-bottom: 6px; /* Reduced spacing */
         }
         #suggestions button {
             width: 100%;
-            padding: 12px;
-            margin: 6px 0;
+            padding: 10px;
+            margin: 4px 0;
             text-align: left;
             background: #e61e3d;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             color: white;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         #suggestions button:after {
             content: "→";
-            font-size: 16px;
-            margin-left: 8px;
+            font-size: 14px;
+            margin-left: 6px;
             opacity: 0.9;
         }
         #suggestions button:hover {
             background: #d41835;
             transform: translateY(-1px);
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .no-keywords {
             color: #666;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
-            padding: 12px;
+            padding: 10px;
             background: #fafafa;
-            border-radius: 6px;
-            margin-top: 6px;
+            border-radius: 5px;
+            margin-top: 4px;
         }
 
         /* Slider Styles */
@@ -103,34 +103,34 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            margin-top: 5px; /* Moved closer */
-            padding: 10px;
+            margin-top: 4px; /* Closer to suggestions */
+            padding: 6px;
             background: #f9f9f9;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         #toneLabel {
-            font-size: 12px;
+            font-size: 11px;
             color: #444;
             text-align: center;
             font-weight: 500;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         #toneSlider {
-            width: 80%;
+            width: 85%;
             cursor: pointer;
             appearance: none;
-            height: 6px;
+            height: 5px;
             background: linear-gradient(to right, #ff8a80, #e61e3d);
-            border-radius: 6px;
+            border-radius: 5px;
             outline: none;
             transition: all 0.2s ease;
         }
         #toneSlider::-webkit-slider-thumb {
             appearance: none;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: white;
-            border: 2px solid #e61e3d;
+            border: 1.5px solid #e61e3d;
             border-radius: 50%;
             cursor: pointer;
             transition: transform 0.2s ease;
@@ -141,17 +141,17 @@
 
         /* Credit Line */
         #creditLine {
-            font-size: 11px;
-            color: #999999;
+            font-size: 10px;
+            color: #999;
             text-align: center;
-            margin-top: 12px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <img src="logo.png" alt="Logo" class="logo">
-    <div class="app-title">Carousell Helper</div>
-    <p id="description">Quickly respond to messages with smart suggestions.</p>
+    <img src="ILazySell.png" alt="Logo" class="logo">
+    <div class="app-title">ILazySell Extension</div>
+    <p id="description">Highlight, don’t type. Click to skip the hassle!</p>
     <div class="divider"></div>
     <h3 id="title">Keyword Detector</h3>
 
@@ -163,7 +163,7 @@
     </div>
 
     <!-- Credit Line -->
-    <p id="creditLine">Made with ❤️ by [Your Name]</p>
+    <p id="creditLine">© Some rights reserved. Others... debug pending.</p>
 
     <script src="popup.js"></script>
 </body>

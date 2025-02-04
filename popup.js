@@ -78,7 +78,7 @@ function generateSuggestions(text, toneLevel) {
 
 // Function to get the corresponding tone label
 function getToneLabel(value) {
-    const tones = ["Casual", "Neutral", "Formal"];
+    const tones = ["Friendly", "Neutral", "Damn CB"];
     return `Tone: ${tones[value]}`;
 }
 
