@@ -73,15 +73,7 @@ function displaySuggestions(suggestions) {
         suggestions.forEach(response => {
             let btn = document.createElement("button");
             btn.textContent = response;
-            btn.style.display = "block";
-            btn.style.width = "100%";
-            btn.style.margin = "5px 0";
-            btn.style.padding = "8px";
-            btn.style.background = "#007bff";
-            btn.style.color = "white";
-            btn.style.border = "none";
-            btn.style.cursor = "pointer";
-            btn.style.borderRadius = "5px";
+            btn.className = "response-btn"; // Apply the red button style
 
             // Copy response to clipboard on click
             btn.addEventListener("click", () => {
