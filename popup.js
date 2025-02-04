@@ -5,70 +5,95 @@ window.onload = async function () {
     const toneLabel = document.getElementById("toneLabel");
 
     let selectedText = await getHighlightedText();
-    let { detectedKeyword, suggestions } = generateSuggestions(selectedText, slider.value);
+    updateSuggestions(selectedText, slider.value);
 
-    title.textContent = detectedKeyword ? `Keyword: ${detectedKeyword}` : "No keyword detected";
-    toneLabel.textContent = getToneLabel(slider.value);
-    displaySuggestions(suggestions);
-
-    // Update responses and tone label dynamically when slider moves
-    slider.addEventListener("input", () => {
-        let { detectedKeyword, suggestions } = generateSuggestions(selectedText, slider.value);
-        title.textContent = detectedKeyword ? `Keyword: ${detectedKeyword}` : "No keyword detected";
-        toneLabel.textContent = getToneLabel(slider.value);
-        displaySuggestions(suggestions);
-    });
+    slider.addEventListener("input", () => updateSuggestions(selectedText, slider.value));
 };
 
 // Get highlighted text
 async function getHighlightedText() {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
     let result = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => window.getSelection().toString()
     });
-
     return result[0].result || "";
 }
 
-// Define multiple keyword-based responses with different tones
+// Update suggestions dynamically
+function updateSuggestions(selectedText, toneLevel) {
+    const { detectedKeyword, suggestions } = generateSuggestions(selectedText, toneLevel);
+    document.getElementById("title").textContent = detectedKeyword ? `Keyword: ${detectedKeyword}` : "No keyword detected";
+    document.getElementById("toneLabel").textContent = getToneLabel(toneLevel);
+    displaySuggestions(suggestions);
+}
+
+// Define multiple keywords that fetch the same responses
 function generateSuggestions(text, toneLevel) {
     const keywordResponses = {
-        "price": [
-            ["Price is flexible!", "Let me know your offer!", "Open to negotiation."], 
-            ["The price is negotiable.", "I'm open to offers.", "Feel free to make a reasonable offer."], 
-            ["I am open to discussing the price.", "The listed price is negotiable to some extent.", "If you have an offer in mind, I’d be happy to consider it."]
+        "price, offer, $": [
+            ["You got a deal!", "That offer is a bit low—perhaps you can reconsider?"], 
+            ["Sure.", "Sorry, can't do."], 
+            ["Can.", "Go fuck spider la."]
         ],
-        "available": [
-            ["Yep, still got it!", "Yes, still up!", "It’s available!"], 
-            ["Yes, this item is still available.", "It's still up for sale.", "I still have it!"], 
-            ["This item is available for purchase.", "It remains available at the moment.", "I can confirm that it’s still available."]
+
+        "interested, would like, would love": [
+            ["Sure! Let me know a date and time to reserve the item for you!"], 
+            ["OK. Pls update me timing for collection to reserve."], 
+            ["LMK your pick-up timing to reserve item."]
         ],
-        "meetup": [
-            ["Meet at MRT ok?", "I can meet anywhere convenient.", "Where works for you?"], 
-            ["I prefer meetups at MRT stations.", "Let me know your preferred meetup location.", "I'm open to meetup locations."], 
-            ["I usually arrange meetups at MRT stations.", "I prefer meeting in a mutually convenient location.", "Happy to coordinate a suitable meeting point."]
+
+        "need, want": [
+            ["Kindly read the description section of my item listing again, thanks!"], 
+            ["Pls read item description thx."], 
+            ["I want your mother la."]
         ],
-        "shipping": [
-            ["Can ship, small extra cost.", "Shipping possible, fee applies.", "I can mail it over!"], 
-            ["I can ship via courier for an additional fee.", "Shipping is available at an extra cost.", "I offer shipping via courier."], 
-            ["I provide courier shipping for an additional charge.", "Shipping can be arranged at an extra cost.", "I am happy to ship via a courier service."]
+
+        "available, availability": [
+            ["Yes! It's definitely available!:)", "Sorry, no :( Someone choped it before you did!", "I'm currently negotiating with another buyer, but I'll update you if anything changes!"], 
+            ["Yup! Interested?", "It's been sold!", "I'm currently negotiating with another buyer."], 
+            ["Ya", "Gone liao la", "If buyer DW then your turn ah."]
         ],
-        "payment": [
-            ["PayNow or cash?", "PayNow works best!", "Cash on meetup ok?"], 
-            ["I accept PayNow and bank transfers.", "Payment via PayNow or bank transfer.", "Cash on meetup or PayNow."], 
-            ["Accepted payment methods include PayNow and bank transfer.", "I prefer transactions via PayNow or bank.", "Let me know your preferred payment method."]
+
+        "meetup, meet-up, meet, meeting, pickup, what time, timing": [
+            ["I usually arrange meetings beneath my block at Jalan Membina Block 27A, 163027. Option for self-collection is also available!:)"], 
+            ["Meetups are at S163027, self-collection available."], 
+            ["Meet @ 163026 OK?"]
+        ],
+
+        "mrt, MRT, train, station": [
+            ["Unfortunately this will be subject to my schedule, and my selling price minus postage fee applies!"], 
+            ["Meetups are at S163027, self-collection available."], 
+            ["Sorry, self-pickup only."]
+        ],
+
+        "shipping, post, postage, mail, mailing": [
+            ["If you’d like it mailed, it’ll be $ (incl. delivery), or you’re welcome to arrange your own pick-up. Happy to give this away for free at my convenience! Let me know what works best for you! Thanks for understanding. 🙌"], 
+            ["That would be $ , which includes postage fee. If you're OK, pls Paynow to 96157448."], 
+            ["It's $ for shipping, Paynow to 96157448."]
+        ],
+
+        "payment, paynow, pay": [
+            ["Kindly Paynow me at 96157448, thank you! Also, let me know your address and I'll post out the package as soon as possible!"], 
+            ["Will post package asap after you Paynow the $$$ and address to 96157448 thanks."], 
+            ["Paynow @ 96157448 & address pls"]
         ]
     };
 
     let detectedSuggestions = [];
     let detectedKeyword = null;
+    text = text.toLowerCase(); // Ensure case-insensitive matching
 
-    for (let keyword in keywordResponses) {
-        if (text.toLowerCase().includes(keyword)) {
-            detectedKeyword = keyword;
-            detectedSuggestions = keywordResponses[keyword][toneLevel]; 
+    for (let keywords in keywordResponses) {
+        const keywordsList = keywords.split(", ");
+        for (let key of keywordsList) {
+            if (text.includes(key)) {
+                detectedKeyword = key; // Store detected keyword
+                detectedSuggestions = keywordResponses[keywords][toneLevel];
+                break;
+            }
+        }
+        if (detectedSuggestions.length > 0) {
             break;
         }
     }
