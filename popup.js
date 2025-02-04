@@ -52,12 +52,12 @@ function generateSuggestions(text, toneLevel) {
         "available, availability": [
             ["Yes! It's definitely available!:)", "Sorry, no :( Someone choped it before you did!", "I'm currently negotiating with another buyer, but I'll update you if anything changes!"], 
             ["Yup! Interested?", "It's been sold!", "I'm currently negotiating with another buyer."], 
-            ["Ya", "Gone liao la", "If buyer DW then your turn ah."]
+            ["Ya", "See la, you indecisive then gone alr liao", "If buyer DW then your turn ah."]
         ],
 
         "meetup, meet-up, meet, meeting, pickup, what time, timing": [
             ["I usually arrange meetings beneath my block at Jalan Membina Block 27A, 163027. Option for self-collection is also available!:)"], 
-            ["Meetups are at S163027, self-collection available."], 
+            ["Kindly schedule your preferred meeting time at S163027, self-collection available."], 
             ["Meet @ 163026 OK?"]
         ],
 
