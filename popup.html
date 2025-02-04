@@ -12,7 +12,7 @@
             padding: 16px;
             margin: 0;
             background: #ffffff;
-            min-height: 160px;
+            min-height: 180px;
             box-sizing: border-box;
         }
         .logo {
@@ -38,19 +38,52 @@
             font-weight: 600;
             color: #1a1a1a;
             margin: 0 0 4px 0;
-            letter-spacing: -0.2px;
             text-align: center;
-            padding: 0 12px;
         }
-        #subtitle {
+        #toneLabel {
             font-size: 12px;
-            color: #666666;
+            color: #e61e3d;
             text-align: center;
-            margin: 0 0 16px 0;
-            font-weight: 400;
-            padding: 0 12px;
-            line-height: 1.4;
+            margin-bottom: 4px;
+            font-weight: 500;
         }
+        #sliderContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        #toneSlider {
+    width: 50%; /* Adjust width for balance */
+    cursor: pointer;
+    appearance: none;
+    height: 4px;
+    background: linear-gradient(to right, #ff8a80, #e61e3d); /* Gradient red for depth */
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+#toneSlider::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: white; /* White thumb for contrast */
+    border: 2px solid #e61e3d;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+#toneSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.1); /* Subtle hover effect */
+}
+#toneSlider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: white;
+    border: 2px solid #e61e3d;
+    border-radius: 50%;
+    cursor: pointer;
+}
         #suggestions button {
             width: 100%;
             padding: 10px 12px;
@@ -60,12 +93,10 @@
             border: none;
             border-radius: 6px;
             color: white;
-            font-family: inherit;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -99,9 +130,16 @@
     <img src="logo.png" alt="Logo" class="logo">
     <div class="app-title">Carousell Helper</div>
     <div class="divider"></div>
+    
     <h3 id="title">Keyword Detector</h3>
-    <p id="subtitle">Highlight any text to see message suggestions</p>
+    <p id="toneLabel">Tone: Neutral</p> <!-- Dynamic Tone Label -->
+    
+    <div id="sliderContainer">
+        <input type="range" id="toneSlider" min="0" max="2" step="1" value="1">
+    </div>
+
     <div id="suggestions"></div>
+    
     <script src="popup.js"></script>
 </body>
 </html>
