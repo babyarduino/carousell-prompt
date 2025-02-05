@@ -4,27 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Keywords</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
-        h2 { text-align: center; }
-        input, button { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
-        ul { list-style: none; padding: 0; }
-        li { background: #f4f4f4; padding: 10px; margin-bottom: 5px; }
-        .delete-btn { background: red; color: white; border: none; cursor: pointer; }
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 480px;
+            margin: 20px auto;
+            padding: 0 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .logo {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 8px;
+        }
+        h2 {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 0 4px;
+            color: #333;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #e61e3d;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #saveMapping {
+            background: #e61e3d;
+            color: white;
+            width: 100%;
+            margin: 8px 0 16px;
+        }
+        #saveMapping:hover {
+            background: #d41835;
+        }
+        #resetMappings {
+            background: #f5f5f5;
+            color: #666;
+            width: 100%;
+            margin-top: 16px;
+        }
+        #resetMappings:hover {
+            background: #eee;
+        }
+        #keywordList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #keywordList li {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+        .edit-btn, .save-btn, .delete-btn {
+            padding: 6px 10px;
+            margin-right: 4px;
+            font-size: 11px;
+        }
+        .edit-btn {
+            background: #f5f5f5;
+            color: #666;
+        }
+        .save-btn {
+            background: #e61e3d;
+            color: white;
+            display: none;
+        }
+        .delete-btn {
+            background: #fee;
+            color: #e61e3d;
+        }
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 20px -20px;
+        }
     </style>
 </head>
 <body>
-    <h2>Manage Keywords</h2>
+    <div class="header">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h2>Keyword Manager</h2>
+        <p class="subtitle">Add and manage your response templates</p>
+    </div>
+    
     <input type="text" id="newKeyword" placeholder="Enter keyword(s)">
-    <input type="text" id="friendlyResponse" placeholder="Friendly Response">
-    <input type="text" id="neutralResponse" placeholder="Neutral Response">
-    <input type="text" id="damnCBResponse" placeholder="Damn CB Response">
+    <input type="text" id="friendlyResponse" placeholder="Friendly response">
+    <input type="text" id="neutralResponse" placeholder="Neutral response">
+    <input type="text" id="damnCBResponse" placeholder="Casual response">
     <button id="saveMapping">Save Mapping</button>
-
+    
+    <div class="divider"></div>
+    
     <ul id="keywordList"></ul>
-
-    <button id="resetMappings" style="background-color: orange;">Reset to Default</button>
-
+    
+    <button id="resetMappings">Reset to Default</button>
+    
     <script src="options.js"></script>
 </body>
 </html>
