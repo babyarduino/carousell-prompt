@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Keywords</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+        h2 { text-align: center; }
+        input, button { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
+        ul { list-style: none; padding: 0; }
+        li { background: #f4f4f4; padding: 10px; margin-bottom: 5px; }
+        .edit-btn { background: blue; color: white; border: none; cursor: pointer; margin-left: 5px; }
+        .save-btn { background: green; color: white; border: none; cursor: pointer; margin-left: 5px; display: none; }
+        .delete-btn { background: red; color: white; border: none; cursor: pointer; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Manage Keywords</h2>
+    <input type="text" id="newKeyword" placeholder="Enter keyword(s)">
+    <input type="text" id="friendlyResponse" placeholder="Friendly Response">
+    <input type="text" id="neutralResponse" placeholder="Neutral Response">
+    <input type="text" id="damnCBResponse" placeholder="Damn CB Response">
+    <button id="saveMapping">Save Mapping</button>
+
+    <ul id="keywordList"></ul>
+
+    <button id="resetMappings" style="background-color: orange;">Reset to Default</button>
+
+    <script src="options.js"></script>
+</body>
+</html>
