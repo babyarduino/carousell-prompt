@@ -10,7 +10,7 @@ const defaultMappings = {
     "price, offer, $": {
         friendly: "You got a deal!",
         neutral: "Sure.",
-        damnCB: "Can."
+        damnCB: "KCan."
     },
     "interested, would like, would love": {
         friendly: "Sure! Let me know a date and time to reserve the item for you!",
