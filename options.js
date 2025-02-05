@@ -33,7 +33,7 @@ function initializeKeywordMappings() {
     });
 }
 
-// Save new keyword mapping
+// Save new keyword mapping (supports empty keywords)
 function saveKeywordMapping() {
     let keywordInput = document.getElementById("keywordInput").value.trim();
     let friendlyResponse = document.getElementById("friendlyResponse").value.trim();
@@ -41,11 +41,13 @@ function saveKeywordMapping() {
     let damnCBResponse = document.getElementById("damnCBResponse").value.trim();
 
     let keywords = keywordInput.split(",").map(k => k.trim()).filter(k => k !== "");
+    let uniqueID = `entry-${Date.now()}`; // Unique ID for empty keyword entries
 
-    if (keywords.length > 0 && friendlyResponse && neutralResponse && damnCBResponse) {
+    if (friendlyResponse && neutralResponse && damnCBResponse) {
         chrome.storage.sync.get("mappings", (data) => {
             let mappings = data.mappings || {};
-            mappings[keywords.join(", ")] = {
+            let key = keywords.length > 0 ? keywords.join(", ") : uniqueID; // Ensure unique empty keyword groups
+            mappings[key] = {
                 friendly: friendlyResponse,
                 neutral: neutralResponse,
                 damnCB: damnCBResponse
@@ -59,20 +61,19 @@ function saveKeywordMapping() {
             });
         });
     } else {
-        alert("Please enter at least one keyword and responses for all fields.");
+        alert("All response fields must be filled.");
     }
 }
 
-// Load and display stored keyword mappings (with edit, save, and delete)
+// Load and display stored keyword mappings (supports multiple empty entries)
 function loadKeywordMappings() {
     chrome.storage.sync.get("mappings", (data) => {
         let keywordList = document.getElementById("keywordList");
         keywordList.innerHTML = "";
 
         let mappings = data.mappings || {};
-        for (let keywordGroup in mappings) {
-            let responses = mappings[keywordGroup];
-            let keywords = keywordGroup.split(", ");
+        Object.entries(mappings).forEach(([keywordGroup, responses]) => {
+            let keywords = keywordGroup.startsWith("entry-") ? [] : keywordGroup.split(", ").filter(k => k !== "");
 
             let li = document.createElement("li");
             li.innerHTML = `
@@ -83,56 +84,64 @@ function loadKeywordMappings() {
                             <button class="delete-tag" data-keyword="${k}" data-group="${keywordGroup}">×</button>
                         </span>
                     `).join("")}
+                    ${keywords.length === 0 ? '<span class="empty-keywords">No keywords - click Save to add new ones</span>' : ''}
+                    <input type="text" class="new-keyword-input" placeholder="Add keyword (Enter)">
                 </div>
                 <input type="text" value="${responses.friendly}" class="edit-friendly">
                 <input type="text" value="${responses.neutral}" class="edit-neutral">
                 <input type="text" value="${responses.damnCB}" class="edit-damnCB">
                 <button class="save-btn">Save</button>
-                <button class="delete-btn">Delete</button>
+                <button class="delete-btn">Delete Group</button>
             `;
 
-            // Add event listeners for tag deletion
+            // Allow adding new keywords
+            let newKeywordInput = li.querySelector(".new-keyword-input");
+            newKeywordInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    let newKeyword = newKeywordInput.value.trim();
+                    if (newKeyword) {
+                        chrome.storage.sync.get("mappings", (data) => {
+                            let mappings = { ...data.mappings };
+                            let updatedKeywords = keywords.concat(newKeyword).join(", ");
+                            mappings[updatedKeywords] = responses;
+                            delete mappings[keywordGroup];
+                            chrome.storage.sync.set({ mappings }, loadKeywordMappings);
+                        });
+                    }
+                }
+            });
+
+            // Allow deleting individual keywords
             li.querySelectorAll('.delete-tag').forEach(button => {
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const keywordToDelete = button.dataset.keyword;
                     const originalGroup = button.dataset.group;
-                    
+
                     chrome.storage.sync.get("mappings", (data) => {
-                        let mappings = data.mappings || {};
-                        let remainingKeywords = keywords.filter(k => k !== keywordToDelete);
-                        
-                        if (remainingKeywords.length > 0) {
-                            // If there are remaining keywords, update the mapping
-                            let newKey = remainingKeywords.join(", ");
-                            mappings[newKey] = mappings[originalGroup];
-                            delete mappings[originalGroup];
-                        } else {
-                            // If no keywords left, delete the entire mapping
-                            delete mappings[originalGroup];
-                        }
-                        
+                        let mappings = { ...data.mappings };
+                        let responses = mappings[originalGroup];
+
+                        let remainingKeywords = originalGroup.split(", ").filter(k => k !== "" && k !== keywordToDelete);
+                        let newGroup = remainingKeywords.length > 0 ? remainingKeywords.join(", ") : `entry-${Date.now()}`; // Unique ID for empty groups
+
+                        mappings[newGroup] = responses;
+                        delete mappings[originalGroup];
                         chrome.storage.sync.set({ mappings }, loadKeywordMappings);
                     });
                 });
             });
 
-            let saveBtn = li.querySelector(".save-btn");
-            let deleteBtn = li.querySelector(".delete-btn");
-
-            let friendlyInput = li.querySelector(".edit-friendly");
-            let neutralInput = li.querySelector(".edit-neutral");
-            let damnCBInput = li.querySelector(".edit-damnCB");
-
-            // Save edited response
-            saveBtn.addEventListener("click", () => {
-                let updatedFriendly = friendlyInput.value.trim();
-                let updatedNeutral = neutralInput.value.trim();
-                let updatedDamnCB = damnCBInput.value.trim();
+            // Save button event listener
+            li.querySelector(".save-btn").addEventListener("click", () => {
+                let updatedFriendly = li.querySelector(".edit-friendly").value.trim();
+                let updatedNeutral = li.querySelector(".edit-neutral").value.trim();
+                let updatedDamnCB = li.querySelector(".edit-damnCB").value.trim();
 
                 if (updatedFriendly && updatedNeutral && updatedDamnCB) {
                     chrome.storage.sync.get("mappings", (data) => {
-                        let mappings = data.mappings || {};
+                        let mappings = { ...data.mappings };
                         mappings[keywordGroup] = {
                             friendly: updatedFriendly,
                             neutral: updatedNeutral,
@@ -141,23 +150,21 @@ function loadKeywordMappings() {
                         chrome.storage.sync.set({ mappings }, loadKeywordMappings);
                     });
                 } else {
-                    alert("All responses must be filled out before saving.");
+                    alert("All responses must be filled before saving.");
                 }
             });
 
-            deleteBtn.addEventListener("click", () => deleteKeywordMapping(keywordGroup));
+            // Delete button event listener
+            li.querySelector(".delete-btn").addEventListener("click", () => {
+                chrome.storage.sync.get("mappings", (data) => {
+                    let mappings = { ...data.mappings };
+                    delete mappings[keywordGroup];
+                    chrome.storage.sync.set({ mappings }, loadKeywordMappings);
+                });
+            });
 
             keywordList.appendChild(li);
-        }
-    });
-}
-
-// Delete a keyword mapping
-function deleteKeywordMapping(keyword) {
-    chrome.storage.sync.get("mappings", (data) => {
-        let mappings = data.mappings || {};
-        delete mappings[keyword];
-        chrome.storage.sync.set({ mappings }, loadKeywordMappings);
+        });
     });
 }
 
