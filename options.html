@@ -229,6 +229,29 @@
         .new-keyword-input::placeholder {
             color: #999;
         }
+        .response-section {
+            margin-bottom: 16px;
+        }
+        .response-section label {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .response-section input {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .response-section input:focus {
+            border-color: #e61e3d;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(230, 30, 61, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -242,9 +265,27 @@
         <input type="text" id="keywordInput" placeholder="Enter keywords (comma-separated)">
     </div>
 
-    <input type="text" id="friendlyResponse" placeholder="Friendly response">
-    <input type="text" id="neutralResponse" placeholder="Neutral response">
-    <input type="text" id="damnCBResponse" placeholder="Casual response">
+    <div class="response-section">
+        <label>Friendly Responses</label>
+        <input type="text" id="friendlyResponse1" placeholder="Friendly response 1">
+        <input type="text" id="friendlyResponse2" placeholder="Friendly response 2">
+        <input type="text" id="friendlyResponse3" placeholder="Friendly response 3">
+    </div>
+
+    <div class="response-section">
+        <label>Neutral Responses</label>
+        <input type="text" id="neutralResponse1" placeholder="Neutral response 1">
+        <input type="text" id="neutralResponse2" placeholder="Neutral response 2">
+        <input type="text" id="neutralResponse3" placeholder="Neutral response 3">
+    </div>
+
+    <div class="response-section">
+        <label>Casual Responses</label>
+        <input type="text" id="damnCBResponse1" placeholder="Casual response 1">
+        <input type="text" id="damnCBResponse2" placeholder="Casual response 2">
+        <input type="text" id="damnCBResponse3" placeholder="Casual response 3">
+    </div>
+
     <button id="saveMapping">Save Mapping</button>
 
     <div class="divider"></div>

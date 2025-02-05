@@ -1,20 +1,19 @@
 {
-    "manifest_version": 3,
-    "name": "Carousell Keyword Highlighter",
-    "version": "1.1",
-    "description": "Suggests template responses based on highlighted keywords in Carousell chat.",
-    "permissions": ["activeTab", "scripting", "storage"],
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "16": "ILazySell.png",
-        "48": "ILazySell.png",
-        "128": "ILazySell.png"
-      }
-    },
-    "web_accessible_resources": [{
-      "resources": ["options.html"],
-      "matches": ["<all_urls>"]
-    }]
-  }
-  
+  "manifest_version": 3,
+  "name": "Carousell Keyword Highlighter",
+  "version": "1.1",
+  "description": "Suggests template responses based on highlighted keywords in Carousell chat.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "ILazySell.png",
+      "48": "ILazySell.png",
+      "128": "ILazySell.png"
+    }
+  },
+  "web_accessible_resources": [{
+    "resources": ["options.html"],
+    "matches": ["<all_urls>"]
+  }]
+}
