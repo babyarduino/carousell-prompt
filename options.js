@@ -24,11 +24,14 @@ const defaultMappings = {
     }
 };
 
-// Initialize storage with default mappings if empty
+// Ensure default mappings load unless manually deleted
 function initializeKeywordMappings() {
     chrome.storage.sync.get("mappings", (data) => {
-        if (!data.mappings || Object.keys(data.mappings).length === 0) {
-            chrome.storage.sync.set({ mappings: defaultMappings });
+        let mappings = data.mappings || {};
+        if (Object.keys(mappings).length === 0) {
+            chrome.storage.sync.set({ mappings: defaultMappings }, loadKeywordMappings);
+        } else {
+            loadKeywordMappings();
         }
     });
 }
@@ -65,13 +68,20 @@ function saveKeywordMapping() {
     }
 }
 
-// Load and display stored keyword mappings (supports multiple empty entries)
+// Load and display stored keyword mappings (ensures defaults appear unless removed)
 function loadKeywordMappings() {
     chrome.storage.sync.get("mappings", (data) => {
+        let mappings = data.mappings || {};
+
+        // If all mappings have been deleted, restore defaults
+        if (Object.keys(mappings).length === 0) {
+            mappings = { ...defaultMappings };
+            chrome.storage.sync.set({ mappings });
+        }
+
         let keywordList = document.getElementById("keywordList");
         keywordList.innerHTML = "";
 
-        let mappings = data.mappings || {};
         Object.entries(mappings).forEach(([keywordGroup, responses]) => {
             let keywords = keywordGroup.startsWith("entry-") ? [] : keywordGroup.split(", ").filter(k => k !== "");
 
