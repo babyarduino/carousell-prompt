@@ -70,20 +70,52 @@ function loadKeywordMappings() {
         keywordList.innerHTML = "";
 
         let mappings = data.mappings || {};
-        for (let keyword in mappings) {
-            let responses = mappings[keyword];
+        for (let keywordGroup in mappings) {
+            let responses = mappings[keywordGroup];
+            let keywords = keywordGroup.split(", ");
 
             let li = document.createElement("li");
             li.innerHTML = `
                 <div class="keyword-container">
-                    ${keyword.split(", ").map(k => `<span class="keyword-tag">${k} <button class="delete-keyword" data-keyword="${k}">✖</button></span>`).join("")}
+                    ${keywords.map(k => `
+                        <span class="keyword-tag">
+                            ${k}
+                            <button class="delete-tag" data-keyword="${k}" data-group="${keywordGroup}">×</button>
+                        </span>
+                    `).join("")}
                 </div>
                 <input type="text" value="${responses.friendly}" class="edit-friendly">
                 <input type="text" value="${responses.neutral}" class="edit-neutral">
                 <input type="text" value="${responses.damnCB}" class="edit-damnCB">
-                <button class="save-btn">💾 Save</button>
-                <button class="delete-btn">❌ Delete</button>
+                <button class="save-btn">Save</button>
+                <button class="delete-btn">Delete</button>
             `;
+
+            // Add event listeners for tag deletion
+            li.querySelectorAll('.delete-tag').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const keywordToDelete = button.dataset.keyword;
+                    const originalGroup = button.dataset.group;
+                    
+                    chrome.storage.sync.get("mappings", (data) => {
+                        let mappings = data.mappings || {};
+                        let remainingKeywords = keywords.filter(k => k !== keywordToDelete);
+                        
+                        if (remainingKeywords.length > 0) {
+                            // If there are remaining keywords, update the mapping
+                            let newKey = remainingKeywords.join(", ");
+                            mappings[newKey] = mappings[originalGroup];
+                            delete mappings[originalGroup];
+                        } else {
+                            // If no keywords left, delete the entire mapping
+                            delete mappings[originalGroup];
+                        }
+                        
+                        chrome.storage.sync.set({ mappings }, loadKeywordMappings);
+                    });
+                });
+            });
 
             let saveBtn = li.querySelector(".save-btn");
             let deleteBtn = li.querySelector(".delete-btn");
@@ -101,7 +133,7 @@ function loadKeywordMappings() {
                 if (updatedFriendly && updatedNeutral && updatedDamnCB) {
                     chrome.storage.sync.get("mappings", (data) => {
                         let mappings = data.mappings || {};
-                        mappings[keyword] = {
+                        mappings[keywordGroup] = {
                             friendly: updatedFriendly,
                             neutral: updatedNeutral,
                             damnCB: updatedDamnCB
@@ -113,7 +145,7 @@ function loadKeywordMappings() {
                 }
             });
 
-            deleteBtn.addEventListener("click", () => deleteKeywordMapping(keyword));
+            deleteBtn.addEventListener("click", () => deleteKeywordMapping(keywordGroup));
 
             keywordList.appendChild(li);
         }
