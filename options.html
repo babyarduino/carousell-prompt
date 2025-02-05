@@ -33,6 +33,32 @@
             color: #666;
             margin: 0;
         }
+        .keyword-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            background: #f9f9f9;
+            min-height: 40px;
+        }
+        .keyword-tag {
+            background: #007BFF;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            margin: 3px;
+        }
+        .keyword-tag button {
+            margin-left: 5px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
         input {
             width: 100%;
             padding: 8px 12px;
@@ -98,7 +124,7 @@
         .save-btn {
             background: #e61e3d;
             color: white;
-            display: none;
+            display: inline-block;
         }
         .delete-btn {
             background: #fee;
@@ -117,19 +143,22 @@
         <h2>Keyword Manager</h2>
         <p class="subtitle">Add and manage your response templates</p>
     </div>
-    
-    <input type="text" id="newKeyword" placeholder="Enter keyword(s)">
+
+    <div class="keyword-container" id="keywordContainer">
+        <input type="text" id="keywordInput" placeholder="Enter keywords (comma-separated)">
+    </div>
+
     <input type="text" id="friendlyResponse" placeholder="Friendly response">
     <input type="text" id="neutralResponse" placeholder="Neutral response">
     <input type="text" id="damnCBResponse" placeholder="Casual response">
     <button id="saveMapping">Save Mapping</button>
-    
+
     <div class="divider"></div>
-    
+
     <ul id="keywordList"></ul>
-    
+
     <button id="resetMappings">Reset to Default</button>
-    
+
     <script src="options.js"></script>
 </body>
 </html>
