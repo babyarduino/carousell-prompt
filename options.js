@@ -9,29 +9,38 @@ document.addEventListener("DOMContentLoaded", function () {
 const defaultMappings = {
     "available, availability": {
         friendly: [
-            "Yes! It's definitely available!:) To reserve the item, please let me know.",
-            "Sorry, no :( Someone choped it before you did! I'll let you know if anything changes.",
+            "Yes! It's definitely available! 😊 To reserve it for you, just let me know when you'd like to collect it.",
+            "Sorry, no! 😔 Someone reserved it before you did. I'll let you know if anything changes!",
         ],
         neutral: [
-            "Yes, lmk your collection timing to reserve.",
-            "Nope. Will update u if anything changes.",
+            "Yes, let me know your collection timing to reserve.",
+            "Nope, will update you if anything changes.",
         ],
         damnCB: [
-            "Yup.",
-            "Nope.",
+            "Still have!",
+            "Choped already. Will update.",
         ]
     },
-    "interested, would like, would love": {
-        friendly: "Sure! Let me know a date and time to reserve the item for you!",
-        neutral: "OK. Pls update me timing for collection to reserve.",
-        damnCB: "LMK your pick-up timing to reserve item."
+    "interested, would like, would love, will like, will love, reserve, hold": {
+        friendly: [
+            "Let me know a date and time, or if you'd like it posted, and I'll reserve the item for you. Please ensure you've read the item condition and any defects, along with my conditions.",
+        ],
+        neutral: [
+            "Confirm ur collection date/time or if you'd like it posted, and I'll reserve it. Please review the item condition and my terms.",
+        ],
+        damnCB: [
+            "Can. LMK timing/mail to reserve."
+        ]
     },
-    "need, want": {
-        friendly: [ "Kindly read the description section of my item listing again, thanks!", ],
-        neutral: [ "Pls read item description thx.", ],
+    "nego, negotiation, lower price": {
+        friendly: [ 
+            "I totally understand! I'm happy to work something out. Let me know your offer, and we can discuss! 😊", 
+        ],
+        neutral: [ 
+            "I'll consider, lmk what you have in mind. :)", 
+        ],
         damnCB: [ 
-            "Want your mother la.",
-            "Need ur mother la.",
+            "U interested anot? Price alr good la."
          ]
     }
 };
@@ -88,7 +97,111 @@ function saveKeywordMapping() {
 
     // Validate responses
     if (friendlyResponses.length === 0 || neutralResponses.length === 0 || damnCBResponses.length === 0) {
-        alert("Please provide at least one response for each tone level.");
+        // First ensure the styles exist
+        if (!document.querySelector('style[data-popup-styles]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-popup-styles', '');
+            style.textContent = `
+                .reset-popup {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                }
+
+                .reset-popup-content {
+                    background: white;
+                    padding: 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    max-width: 400px;
+                    width: 90%;
+                }
+
+                .reset-popup-content h3 {
+                    margin: 0 0 16px 0;
+                    color: #333;
+                    font-size: 18px;
+                }
+
+                .reset-popup-content p {
+                    margin: 0 0 20px 0;
+                    color: #666;
+                    font-size: 14px;
+                }
+
+                .reset-popup-buttons {
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 12px;
+                }
+
+                .reset-popup-buttons button {
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    border: none;
+                }
+
+                #cancelSave {
+                    background: #f5f5f5;
+                    color: #666;
+                }
+
+                #confirmSave {
+                    background: #e61e3d;
+                    color: white;
+                }
+
+                #cancelSave:hover {
+                    background: #eee;
+                }
+
+                #confirmSave:hover {
+                    background: #d41834;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        const popup = document.createElement('div');
+        popup.className = 'reset-popup';
+        popup.innerHTML = `
+            <div class="reset-popup-content">
+                <h3>Missing Responses</h3>
+                <p>Please provide at least one response for each tone level.</p>
+                <div class="reset-popup-buttons">
+                    <button id="cancelSave">Cancel</button>
+                    <button id="confirmSave">OK</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        // Handle button clicks
+        document.getElementById('cancelSave').addEventListener('click', () => {
+            document.body.removeChild(popup);
+        });
+
+        document.getElementById('confirmSave').addEventListener('click', () => {
+            document.body.removeChild(popup);
+        });
+
+        // Close popup when clicking outside
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                document.body.removeChild(popup);
+            }
+        });
+
         return;
     }
 
@@ -158,34 +271,61 @@ function loadKeywordMappings() {
                     <div class="tone-section">
                         <label>Friendly Responses</label>
                         <div class="response-list">
-                            <input type="text" value="${Array.isArray(responses.friendly) ? responses.friendly[0] || '' : responses.friendly || ''}" 
-                                class="response-input friendly" data-index="0" placeholder="Friendly response 1">
-                            <input type="text" value="${Array.isArray(responses.friendly) ? responses.friendly[1] || '' : ''}" 
-                                class="response-input friendly" data-index="1" placeholder="Friendly response 2">
-                            <input type="text" value="${Array.isArray(responses.friendly) ? responses.friendly[2] || '' : ''}" 
-                                class="response-input friendly" data-index="2" placeholder="Friendly response 3">
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.friendly) ? responses.friendly[0] || '' : responses.friendly || ''}" 
+                                    class="response-input friendly" data-index="0" placeholder="Friendly response 1">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.friendly) ? responses.friendly[1] || '' : ''}" 
+                                    class="response-input friendly" data-index="1" placeholder="Friendly response 2">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.friendly) ? responses.friendly[2] || '' : ''}" 
+                                    class="response-input friendly" data-index="2" placeholder="Friendly response 3">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
                         </div>
                     </div>
                     <div class="tone-section">
                         <label>Neutral Responses</label>
                         <div class="response-list">
-                            <input type="text" value="${Array.isArray(responses.neutral) ? responses.neutral[0] || '' : responses.neutral || ''}" 
-                                class="response-input neutral" data-index="0" placeholder="Neutral response 1">
-                            <input type="text" value="${Array.isArray(responses.neutral) ? responses.neutral[1] || '' : ''}" 
-                                class="response-input neutral" data-index="1" placeholder="Neutral response 2">
-                            <input type="text" value="${Array.isArray(responses.neutral) ? responses.neutral[2] || '' : ''}" 
-                                class="response-input neutral" data-index="2" placeholder="Neutral response 3">
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.neutral) ? responses.neutral[0] || '' : responses.neutral || ''}" 
+                                    class="response-input neutral" data-index="0" placeholder="Neutral response 1">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.neutral) ? responses.neutral[1] || '' : ''}" 
+                                    class="response-input neutral" data-index="1" placeholder="Neutral response 2">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.neutral) ? responses.neutral[2] || '' : ''}" 
+                                    class="response-input neutral" data-index="2" placeholder="Neutral response 3">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
                         </div>
                     </div>
                     <div class="tone-section">
                         <label>Casual Responses</label>
                         <div class="response-list">
-                            <input type="text" value="${Array.isArray(responses.damnCB) ? responses.damnCB[0] || '' : responses.damnCB || ''}" 
-                                class="response-input damnCB" data-index="0" placeholder="Casual response 1">
-                            <input type="text" value="${Array.isArray(responses.damnCB) ? responses.damnCB[1] || '' : ''}" 
-                                class="response-input damnCB" data-index="1" placeholder="Casual response 2">
-                            <input type="text" value="${Array.isArray(responses.damnCB) ? responses.damnCB[2] || '' : ''}" 
-                                class="response-input damnCB" data-index="2" placeholder="Casual response 3">
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.damnCB) ? responses.damnCB[0] || '' : responses.damnCB || ''}" 
+                                    class="response-input damnCB" data-index="0" placeholder="Casual response 1">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.damnCB) ? responses.damnCB[1] || '' : ''}" 
+                                    class="response-input damnCB" data-index="1" placeholder="Casual response 2">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
+                            <div class="response-input-group">
+                                <input type="text" value="${Array.isArray(responses.damnCB) ? responses.damnCB[2] || '' : ''}" 
+                                    class="response-input damnCB" data-index="2" placeholder="Casual response 3">
+                                <button class="copy-btn" title="Copy to clipboard">📋</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -269,6 +409,29 @@ function loadKeywordMappings() {
                 });
             });
 
+            // Add copy button event listeners
+            li.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const text = input.value;
+                    if (text) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            // Visual feedback
+                            const originalText = this.textContent;
+                            this.textContent = '✓';
+                            this.style.backgroundColor = '#4CAF50';
+                            this.style.color = 'white';
+                            
+                            setTimeout(() => {
+                                this.textContent = originalText;
+                                this.style.backgroundColor = '';
+                                this.style.color = '';
+                            }, 1000);
+                        });
+                    }
+                });
+            });
+
             keywordList.appendChild(li);
         });
     });
@@ -276,8 +439,110 @@ function loadKeywordMappings() {
 
 // Reset to default mappings
 function resetToDefaultMappings() {
-    chrome.storage.sync.set({ mappings: defaultMappings }, () => {
-        loadKeywordMappings();
-        alert("Keyword mappings have been reset to default!");
+    // Create and style the popup
+    const popup = document.createElement('div');
+    popup.className = 'reset-popup';
+    popup.innerHTML = `
+        <div class="reset-popup-content">
+            <h3>Reset to Default Mappings</h3>
+            <p>Are you sure? This will remove all custom mappings.</p>
+            <div class="reset-popup-buttons">
+                <button id="cancelReset">Cancel</button>
+                <button id="confirmReset">Reset</button>
+            </div>
+        </div>
+    `;
+
+    // Add the popup styles to options.html
+    const style = document.createElement('style');
+    style.textContent = `
+        .reset-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .reset-popup-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .reset-popup-content h3 {
+            margin: 0 0 16px 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .reset-popup-content p {
+            margin: 0 0 20px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .reset-popup-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .reset-popup-buttons button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        #cancelReset {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        #confirmReset {
+            background: #e61e3d;
+            color: white;
+        }
+
+        #cancelReset:hover {
+            background: #eee;
+        }
+
+        #confirmReset:hover {
+            background: #d41834;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Add the popup to the page
+    document.body.appendChild(popup);
+
+    // Handle button clicks
+    document.getElementById('cancelReset').addEventListener('click', () => {
+        document.body.removeChild(popup);
+    });
+
+    document.getElementById('confirmReset').addEventListener('click', () => {
+        chrome.storage.sync.set({ mappings: defaultMappings }, () => {
+            loadKeywordMappings();
+            document.body.removeChild(popup);
+        });
+    });
+
+    // Close popup when clicking outside
+    popup.addEventListener('click', (e) => {
+        if (e.target === popup) {
+            document.body.removeChild(popup);
+        }
     });
 }
