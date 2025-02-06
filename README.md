@@ -2,7 +2,7 @@
 
 Click-Chatting to Save Your Sanity
 
-I got tired of typing the same replies on Carousell, so I made an extension that doesn't inject scripts or scrape servers. Now, I just highlight keywords, get instant response suggestions, and tweak the tone with a slider (Friendly, Neutral, or "Damn CB") based on how the conversatzion is going. I can also manage my own keyword-based responses and reply with one click. It’s simple, I save time and my sanity.
+I got tired of repeating replies on Carousell, so I made an extension that skips scraping and scripts. Now, I just highlight keywords, get instant suggestions, and adjust the tone (Friendly, Neutral, or "Damn CB") with a slider. I can also manage my own responses and reply with one click. Simple, fast, and sanity-saving.
 
 ✅ Instant Replies – Highlight keywords to fetch smart responses
 
